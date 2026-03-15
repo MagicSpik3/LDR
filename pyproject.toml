@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build-meta"
+
+[project]
+name = "ldr"
+version = "0.1.0"
+description = "Linear Dimensionality Reduction for Worker Anomaly Detection"
+dependencies = [
+    "pandas",
+    "numpy",
+    "scikit-learn",
+    "matplotlib",
+    "seaborn",
+    "pytest"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

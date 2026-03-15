@@ -1,0 +1,54 @@
+---
+title: "Worker Behavior Audit"
+subtitle: "Project LDR: Anomaly Detection"
+author: "Mark London"
+#format:
+#  pptx:
+#    reference-doc: template.pptx
+execute:
+  echo: false
+---
+
+```{python}
+import os
+import sys
+import matplotlib.pyplot as plt
+
+# Path setup
+current_dir = os.getcwd()
+src_path = os.path.abspath(os.path.join(current_dir, "..", "src"))
+if src_path not in sys.path:
+    sys.path.append(src_path)
+
+import evidence_generator
+from anomaly_detector import detect_worker_anomalies
+
+# Run the audit once at the top to get variables
+df = evidence_generator.get_frozen_data()
+processed = detect_worker_anomalies(df)
+count = len(processed[processed['anomaly_label'] == -1])
+total = len(processed)
+
+```
+
+## Summary
+
+* **Total Workforce:** `{python} total` Workers
+* **Anomalies Detected:** `{python} count` High-Risk Cases
+* **Method:** Dimensionality Reduction (PCA)
+
+[This system automatically filtered the "Territory" to find the `{python} count` workers who deviate from the standard "Map".]{font-size="18pt"}
+
+---
+
+## Stage 1: The Distribution
+
+```{python}
+plt.figure(figsize=(8, 5))
+df['mileage'].hist(bins=15, color='#1F4E79', edgecolor='white')
+plt.title("Distribution of Raw Mileage")
+plt.show()
+
+```
+
+```

@@ -1,0 +1,59 @@
+
+## Stage 2: The "Behavioral Map"
+
+### PCA Visualisation
+
+```{python}
+import sys
+import os
+
+sys.path.append(os.path.abspath("../src"))
+
+from evidence_generator import get_frozen_data
+from anomaly_detector import detect_worker_anomalies
+processed_df = detect_worker_anomalies(df, eps=1.2, min_samples=3)
+plot_worker_anomalies(processed_df)
+
+```
+
+::: {.notes}
+Explain to the board that the 'X' marks are not just high mileage, but a combination of factors that no normal worker exhibits.
+:::
+
+---
+
+## Stage 3: Audit Priority List
+
+| Worker ID | Primary Risk | PCA Score |
+| --- | --- | --- |
+| **W_48** | Extreme Mileage / Journey Mismatch | 12.45 |
+| **W_49** | High Frequency Attempt Anomaly | 8.12 |
+
+[**Recommendation:** Immediate manual review of W_48 fuel receipts.]{color="#C62828"}
+
+---
+
+## Why PCA over Rule-Based Audits?
+
+* **The Threshold Trap:** Rules like "Flag > 100 miles" are easy to learn and avoid.
+* **The Territory:** PCA sees the *relationship* between variables.
+* **Scalability:** One model audits 5,000 workers as easily as 5.
+
+```
+
+### 3. Controlling Font Sizes & Styles in PPTX
+Since PowerPoint is a "WYSIWYG" (What You See Is What You Get) format, Quarto handles styles differently than HTML:
+
+1.  **The Reference Doc (The "CSS" of PPT):**
+    Open PowerPoint, create a blank slide, and set your fonts/colors/logo in the **Slide Master**. Save it as `template.pptx` in your folder. Quarto will inject your data into those specific placeholders.
+2.  **Explicit Font Sizing:**
+    In the `.qmd` file, use the bracketed syntax: `[Large Text]{font-size="32pt"}`.
+3.  **Columns:**
+    Use `::: columns` and `::: {.column width="50%"}` to manage side-by-side content.
+
+### 4. How to Generate the Deck
+Run the following in your terminal:
+```bash
+quarto render worker_audit.qmd --to pptx
+
+```
