@@ -1,6 +1,6 @@
 import pandas as pd
 import pytest
-from anomaly_detector import detect_worker_anomalies
+from src.anomaly_detector import detect_worker_anomalies
 
 @pytest.fixture
 def sample_worker_data():
