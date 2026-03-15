@@ -74,6 +74,40 @@ def generate_management_presentation(df):
     plt.grid(True, alpha=0.3)
     plt.show()
 
+
+def generate_executive_summary(processed_df):
+    """Creates a management-ready table explaining why workers were flagged."""
+    anomalies = processed_df[processed_df['anomaly_label'] == -1].copy()
+    
+    # Calculate some helper metrics for the explanation
+    anomalies['miles_per_journey'] = anomalies['mileage'] / anomalies['journeys']
+    
+    summary_list = []
+    for _, row in anomalies.iterrows():
+        # Heuristic to explain the "Why"
+        reason = "Unknown Deviation"
+        if row['mileage'] > 100:
+            reason = "Extreme Mileage / Journey Mismatch"
+        elif row['attempts'] > 20:
+            reason = "High Frequency Attempt Anomaly (Efficiency Risk)"
+            
+        summary_list.append({
+            "Worker ID": row['worker_id'],
+            "Mileage": f"{row['mileage']:.1f}",
+            "Journeys": row['journeys'],
+            "Attempts": row['attempts'],
+            "Primary Risk": reason,
+            "PCA Score": f"{abs(row['pca_1']) + abs(row['pca_2']):.2f}"
+        })
+    
+    summary_df = pd.DataFrame(summary_list)
+    print("\n--- EXECUTIVE SUMMARY: ANOMALIES DETECTED ---")
+    print(summary_df.to_string(index=False))
+    return summary_df
+
+
+
 if __name__ == "__main__":
     df = get_frozen_data()
     generate_management_presentation(df)
+    generate_executive_summary(detect_worker_anomalies(df, eps=1.2, min_samples=3))
